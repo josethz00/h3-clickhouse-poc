@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   clickhouse:
-    image: clickhouse/clickhouse-server:24.8.14
+    image: clickhouse/clickhouse-server:25.11
     container_name: clickhouse
     ports:
       - "8123:8123"  # HTTP interface

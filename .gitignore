@@ -40,3 +40,10 @@ yarn-error.log*
 **/*.log
 package-lock.json
 **/*.bun
+
+*.csv
+h3-clickhouse-poc
+
+
+docker/clickhouse_data/**
+docker/clickhouse_logs/**

@@ -85,7 +85,7 @@ async function insertRawTrips(trips: ParsedTrip[]): Promise<void> {
   `;
 
   try {
-    await client.command({ query });
+    await client.command({ query }).then(() => console.log("Inserted batch of", trips.length, "trips"));
   } catch (err) {
     console.log(query);
     throw err;
@@ -187,6 +187,13 @@ export async function ingestCSVFile(
             processed_rows: processedRows,
           });
 
+          /*
+            Since ClickHouse inserts are blazingly fast, we add a small delay
+            so the users can see progress updates in the job status endpoint. 
+            This can be removed in a production system.
+          */
+          await new Promise(resolve => setTimeout(resolve, 5000));
+
           batch = [];
         }
       }
@@ -198,6 +205,13 @@ export async function ingestCSVFile(
       updateJobStatus(jobId, {
         processed_rows: processedRows,
       });
+
+      /*
+        Since ClickHouse inserts are blazingly fast, we add a small delay
+        so the users can see progress updates in the job status endpoint. 
+        This can be removed in a production system.
+      */
+      await new Promise(resolve => setTimeout(resolve, 5000));
     }
 
     updateJobStatus(jobId, {

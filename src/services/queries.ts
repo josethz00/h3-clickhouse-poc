@@ -12,17 +12,26 @@ export async function getWeeklyAverageWithSpatialFilter(
 ): Promise<WeeklyAverageResult> {
   const { bounding_box, region } = query;
 
-  const h3Expr = `h3Polyfill(polygonFromBBox({minLon:Float64}, {minLat:Float64}, {maxLon:Float64}, {maxLat:Float64}), 10)`;
-
-  let innerWhere = `
-    origin_h3 IN ${h3Expr}
+  // ClickHouse Polygon syntax for h3PolygonToCells
+  const polygonExpr = `
+    
+      [
+        ( {minLon:Float64}, {minLat:Float64} ),
+        ( {minLon:Float64}, {maxLat:Float64} ),
+        ( {maxLon:Float64}, {maxLat:Float64} ),
+        ( {maxLon:Float64}, {minLat:Float64} )
+      ]
+    
   `;
 
+  const h3Expr = `h3PolygonToCells(${polygonExpr}, 10)`;
+
+  let innerWhere = `origin_h3 IN ${h3Expr}`;
   if (region) {
     innerWhere += ` AND region = {region:String}`;
   }
 
-  let sqlQuery = `
+  const sqlQuery = `
     SELECT
       avg(weekly_trips) AS weekly_average,
       count() AS total_weeks,
@@ -36,12 +45,12 @@ export async function getWeeklyAverageWithSpatialFilter(
     )
   `;
 
-  const params: Record<string, unknown> = {
+  const params = {
     minLat: bounding_box.min_lat,
     maxLat: bounding_box.max_lat,
     minLon: bounding_box.min_lon,
     maxLon: bounding_box.max_lon,
-    region: region,
+    region,
   };
 
   const results = await executeQuery<{
@@ -50,11 +59,7 @@ export async function getWeeklyAverageWithSpatialFilter(
   }>(sqlQuery, params);
 
   if (results.length === 0) {
-    return {
-      weekly_average: 0,
-      total_weeks: 0,
-      total_trips: 0,
-    };
+    return { weekly_average: 0, total_weeks: 0, total_trips: 0 };
   }
 
   const result = results[0];
@@ -67,4 +72,3 @@ export async function getWeeklyAverageWithSpatialFilter(
     total_trips: result.total_trips,
   };
 }
-
