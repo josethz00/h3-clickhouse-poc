@@ -12,19 +12,16 @@ export async function getWeeklyAverageWithSpatialFilter(
 ): Promise<WeeklyAverageResult> {
   const { bounding_box, region } = query;
 
-  // ClickHouse Polygon syntax for h3PolygonToCells
   const polygonExpr = `
-    
-      [
-        ( {minLon:Float64}, {minLat:Float64} ),
-        ( {minLon:Float64}, {maxLat:Float64} ),
-        ( {maxLon:Float64}, {maxLat:Float64} ),
-        ( {maxLon:Float64}, {minLat:Float64} )
-      ]
-    
+  [
+    ({minLon:Float64}, {minLat:Float64}),
+    ({minLon:Float64}, {maxLat:Float64}),
+    ({maxLon:Float64}, {maxLat:Float64}),
+    ({maxLon:Float64}, {minLat:Float64})
+  ]
   `;
 
-  const h3Expr = `h3PolygonToCells(${polygonExpr}, 10)`;
+  const h3Expr = `h3PolygonToCells(${polygonExpr}, 7)`;
 
   let innerWhere = `origin_h3 IN ${h3Expr}`;
   if (region) {
@@ -42,6 +39,7 @@ export async function getWeeklyAverageWithSpatialFilter(
       FROM raw_trips
       WHERE ${innerWhere}
       GROUP BY toStartOfWeek(datetime)
+      LIMIT 10
     )
   `;
 
