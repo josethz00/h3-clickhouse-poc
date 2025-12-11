@@ -18,8 +18,6 @@ export function getClickHouseClient(): ClickHouseClient {
       clickhouse_settings: {
         async_insert: 1,
         wait_for_async_insert: 0,
-        async_insert_max_data_size: "30MB",
-        async_insert_stale_timeout_ms: 0,
       },
     });
   }

@@ -1,9 +1,5 @@
 #!/usr/bin/env bun
 
-/**
- * CSV Generation Script
- * Generates large CSV files with trip data based on the sample format
- */
 
 export const __script = true; // Marks file as a module to allow top-level await
 
@@ -11,8 +7,8 @@ interface CityConfig {
   name: string;
   centerLat: number;
   centerLon: number;
-  latRange: number; // ± range for latitude
-  lonRange: number; // ± range for longitude
+  latRange: number;
+  lonRange: number;
 }
 
 const CITIES: CityConfig[] = [
@@ -272,7 +268,6 @@ function generateTimestamp(startDate: Date, endDate: Date): string {
 }
 
 function generateTrip(city: CityConfig, startDate: Date, endDate: Date): string {
-  // Generate origin coordinates within city bounds
   const originLat = randomFloat(
     city.centerLat - city.latRange,
     city.centerLat + city.latRange
@@ -282,7 +277,6 @@ function generateTrip(city: CityConfig, startDate: Date, endDate: Date): string 
     city.centerLon + city.lonRange
   );
 
-  // Generate destination coordinates within city bounds
   const destinationLat = randomFloat(
     city.centerLat - city.latRange,
     city.centerLat + city.latRange
