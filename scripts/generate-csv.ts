@@ -346,8 +346,8 @@ async function generateCSV(
 const args = process.argv.slice(2);
 const rowCount = args[0] ? Number.parseInt(args[0], 10) : 1000000; // Default 1M rows
 const outputPath = args[1] || "trips.csv";
-const startDateStr = args[2] || "2018-05-01";
-const endDateStr = args[3] || "2018-12-31";
+const startDateStr = args[2] || "2016-01-01";
+const endDateStr = args[3] || "2026-01-01";
 
 if (Number.isNaN(rowCount) || rowCount <= 0) {
   console.error("Error: Row count must be a positive number");

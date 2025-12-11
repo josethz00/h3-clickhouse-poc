@@ -10,8 +10,8 @@ CREATE TABLE IF NOT EXISTS raw_trips
   destination_lat Float64 CODEC(ZSTD),
   destination_lon Float64 CODEC(ZSTD),
 
-  origin_h3 UInt64 MATERIALIZED geoToH3(origin_lat, origin_lon, 10),
-  destination_h3 UInt64 MATERIALIZED geoToH3(destination_lat, destination_lon, 10),
+  origin_h3 UInt64 MATERIALIZED geoToH3(origin_lat, origin_lon, 7),
+  destination_h3 UInt64 MATERIALIZED geoToH3(destination_lat, destination_lon, 7),
 
   datetime DateTime CODEC(Delta, LZ4),
   date Date MATERIALIZED toDate(datetime) CODEC(Delta, LZ4),
@@ -20,5 +20,5 @@ CREATE TABLE IF NOT EXISTS raw_trips
 )
 ENGINE = MergeTree()
 ORDER BY (region, date, datetime, origin_h3, destination_h3)
-PARTITION BY toYYYYMM(date)
+PARTITION BY toStartOfQuarter(date)
 SETTINGS index_granularity = 8192;

@@ -21,9 +21,9 @@ export async function getWeeklyAverageWithSpatialFilter(
   ]
   `;
 
-  const h3Expr = `h3PolygonToCells(${polygonExpr}, 10)`;
+  const h3Expr = `h3PolygonToCells(${polygonExpr}, 7)`;
 
-  let innerWhere = `origin_h3 IN ${h3Expr}`;
+  let innerWhere = `has( ${h3Expr} , origin_h3 )`;
   if (region) {
     innerWhere += ` AND region = {region:String}`;
   }
