@@ -1,0 +1,9 @@
+columns format version: 1
+7 columns:
+`hostname` LowCardinality(String)
+`event_date` Date
+`event_time` DateTime
+`code` Int32
+`error` LowCardinality(String)
+`value` UInt64
+`remote` UInt8

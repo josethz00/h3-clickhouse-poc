@@ -1,0 +1,13 @@
+node_modules
+.git
+.gitignore
+.env
+.env.local
+*.log
+.DS_Store
+coverage
+dist
+build
+*.csv
+data/
+

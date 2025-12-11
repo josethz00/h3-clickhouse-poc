@@ -3,10 +3,15 @@
   "version": "1.0.50",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "bun run --watch src/index.ts"
+    "dev": "bun run --watch src/index.ts",
+    "generate-csv": "bun run scripts/generate-csv.ts"
   },
   "dependencies": {
-    "elysia": "latest"
+    "@clickhouse/client": "latest",
+    "csv-parse": "^6.1.0",
+    "elysia": "latest",
+    "h3-js": "^4.3.0",
+    "uuidv7": "^1.1.0"
   },
   "devDependencies": {
     "bun-types": "latest"

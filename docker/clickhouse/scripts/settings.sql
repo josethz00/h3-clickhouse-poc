@@ -1,0 +1,1 @@
+SET date_time_input_format='best_effort';
